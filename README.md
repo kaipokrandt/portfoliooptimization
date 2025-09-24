@@ -70,7 +70,7 @@ scikit-learn
 ```
 git clone <https://github.com/kaipokrandt/portfoliooptimization/tree/main>
 
-cd portfoliooptimization
+cd path/to/portfoliooptimization
 
 python3.11 -m venv .venv
 source .venv/bin/activate
