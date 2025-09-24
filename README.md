@@ -64,3 +64,17 @@ matplotlib
 pypfopt
 scikit-learn
 ```
+
+- Clone the Repository
+```
+git clone <https://github.com/kaipokrandt/portfoliooptimization/tree/main>
+
+cd portfoliooptimization
+
+python3.11 -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+streamlit run streamlit_app.py
+```
