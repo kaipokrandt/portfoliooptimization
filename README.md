@@ -19,7 +19,7 @@ It also simulates how these strategies would have performed in the past — this
 
 ---
 
-## Key Concepts (Plain English)
+## Key Concepts
 
 - **Expected Return:** How much a stock might go up in the future.  
 - **Risk / Volatility:** How much a stock’s price jumps up and down.  
