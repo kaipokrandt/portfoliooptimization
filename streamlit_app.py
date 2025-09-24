@@ -75,6 +75,10 @@ def backtest_rolling(prices: pd.DataFrame, lookback_days: int = 252, rebalance_m
             portfolio_daily.loc[current_date] = current_value
 
     weights_df = pd.DataFrame(all_weights)
+    # Trim early flat 1.0 values (before first meaningful rebalance)
+    first_valid_idx = portfolio_daily.ne(1.0).idxmax()  # first value != 1.0
+    portfolio_daily = portfolio_daily.loc[first_valid_idx:]
+    weights_df = weights_df.loc[first_valid_idx:]  # optional: align weights with trimmed portfolio
     return portfolio_daily.fillna(method='ffill').fillna(1.0), weights_df
 
 if run:
@@ -154,5 +158,5 @@ if run:
             file_name="portfolio_weights.csv",
             mime="text/csv"
         )
-
+    
         
