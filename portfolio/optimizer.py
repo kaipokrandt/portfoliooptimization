@@ -85,3 +85,22 @@ def get_rebalance_weights(prices: pd.DataFrame, lookback_days=252, rebalance_mon
 
     weights_df = pd.DataFrame(all_weights)
     return weights_df
+
+def compute_metrics(portfolio: pd.Series, risk_free_rate: float = 0.02):
+    """
+    Compute cumulative return, daily returns, volatility, and Sharpe ratio.
+    portfolio: pd.Series of portfolio values indexed by date
+    risk_free_rate: annual risk-free rate (decimal)
+    """
+    daily_returns = portfolio.pct_change().dropna()
+    cumulative_return = portfolio.iloc[-1] / portfolio.iloc[0] - 1
+    volatility = daily_returns.std() * np.sqrt(252)  # annualized
+    mean_daily_excess = daily_returns - risk_free_rate/252
+    sharpe_ratio = mean_daily_excess.mean() / daily_returns.std() * np.sqrt(252)
+    
+    metrics = {
+        'Cumulative Return': cumulative_return,
+        'Volatility': volatility,
+        'Sharpe Ratio': sharpe_ratio
+    }
+    return metrics, daily_returns

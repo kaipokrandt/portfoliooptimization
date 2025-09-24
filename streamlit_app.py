@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from portfolio.data import fetch_adjusted_close, compute_returns
-from portfolio.optimizer import max_sharpe_weights, min_volatility_weights, efficient_frontier_curve
+from portfolio.optimizer import max_sharpe_weights, min_volatility_weights, efficient_frontier_curve, compute_metrics
 from portfolio.visuals import plot_frontier_and_random, pie_weights
 from pypfopt import expected_returns, risk_models
 import datetime
@@ -118,19 +118,36 @@ if run:
         st.subheader('Backtest (Rolling Rebalance)')
         bt_max, weights_max = backtest_rolling(prices, lookback_days=252, rebalance_months=rebalance_months, strategy='max_sharpe')
         bt_min, weights_min = backtest_rolling(prices, lookback_days=252, rebalance_months=rebalance_months, strategy='min_volatility')
+        # Compute metrics
+        metrics_max, daily_ret_max = compute_metrics(bt_max, risk_free)
+        metrics_min, daily_ret_min = compute_metrics(bt_min, risk_free)
+
         bt_df = pd.DataFrame({'max_sharpe': bt_max, 'min_vol': bt_min})
         st.line_chart(bt_df.fillna(method='ffill').apply(lambda x: x / x.iloc[0]))
+        bt_export = pd.DataFrame({
+            'date': bt_df.index,
+            'max_sharpe_value': bt_df['max_sharpe'],
+            'min_vol_value': bt_df['min_vol'],
+            'max_sharpe_daily_return': daily_ret_max,
+            'min_vol_daily_return': daily_ret_min
+        })
+        # Display metrics
+        st.subheader("Performance Metrics")
+        metrics_df = pd.DataFrame([metrics_max, metrics_min], index=['Max Sharpe', 'Min Vol'])
+        st.dataframe(metrics_df.style.format("{:.2%}"))
+        # Weights preview
+        weights_all = pd.concat([weights_max, weights_min], axis=1)
+        weights_all.columns = [f"{col}_max_sharpe" for col in weights_max.columns] + [f"{col}_min_vol" for col in weights_min.columns]
+        st.subheader('Portfolio Weights Preview')
+        st.dataframe(weights_all.tail())
 
         # CSV Download Buttons
         st.download_button(
-            label="Download Backtest Portfolio Values CSV",
-            data=bt_df.to_csv().encode('utf-8'),
-            file_name="backtest_portfolio_values.csv",
+            label="Download Backtest Portfolio Values & Metrics CSV",
+            data=bt_export.to_csv().encode('utf-8'),
+            file_name="backtest_portfolio_values_with_metrics.csv",
             mime="text/csv"
         )
-
-        weights_all = pd.concat([weights_max, weights_min], axis=1)
-        weights_all.columns = [f"{col}_max_sharpe" for col in weights_max.columns] + [f"{col}_min_vol" for col in weights_min.columns]
         st.download_button(
             label="Download Portfolio Weights CSV",
             data=weights_all.to_csv().encode('utf-8'),
@@ -138,5 +155,4 @@ if run:
             mime="text/csv"
         )
 
-        st.subheader('Portfolio Weights Preview')
-        st.dataframe(weights_all.tail())
+        
