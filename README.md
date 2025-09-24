@@ -36,6 +36,7 @@ It also simulates how these strategies would have performed in the past — this
 - Runs a **rolling-window backtest** with monthly rebalancing.  
 - Interactive **Streamlit app** for exploring different stocks, strategies, and time periods.
 - Export to CSV for data analysis in Excel.
+- Performance Metrics show in the app.
 
 ---
 
