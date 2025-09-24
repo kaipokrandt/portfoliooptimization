@@ -78,3 +78,42 @@ pip install -r requirements.txt
 
 streamlit run streamlit_app.py
 ```
+
+---
+
+## Cross-Platform Instructions
+
+This project works on **Windows, Linux, and macOS**.  
+
+### 1. Python Version
+- Use **Python 3.11** for all platforms.  
+
+### 2. Virtual Environment
+- **Linux/macOS:**
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+```
+
+- **Windows**
+```bash
+python3.11 -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 3. System Notes
+
+- **Linux: If pypfopt fails to install**
+```bash
+sudo apt-get install -y build-essential libatlas-base-dev
+```
+
+- **Windows usually installs automatically, if not, make sure Visual Studio Build Tools are installed**
+
+### 4. Run the app
+```bash
+streamlit run streamlit_app.py
+```
+
+### 5. Open the local URL localhost:8501
