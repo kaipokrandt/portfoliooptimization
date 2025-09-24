@@ -35,6 +35,7 @@ It also simulates how these strategies would have performed in the past — this
 - Plots the **efficient frontier** to visualize risk vs. return trade-offs.  
 - Runs a **rolling-window backtest** with monthly rebalancing.  
 - Interactive **Streamlit app** for exploring different stocks, strategies, and time periods.
+- Export to CSV for data analysis in Excel.
 
 ---
 

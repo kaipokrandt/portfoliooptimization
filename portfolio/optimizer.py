@@ -59,3 +59,29 @@ def hrp_weights(prices: pd.DataFrame):
     hrp = HRPOpt(prices)
     w = hrp.optimize()
     return w
+
+def get_rebalance_weights(prices: pd.DataFrame, lookback_days=252, rebalance_months=1, strategy='max_sharpe', risk_free_rate=0.0):
+    prices = prices.dropna()
+    dates = prices.index
+    start = dates[0] + pd.Timedelta(days=lookback_days)
+    rebalance_dates = pd.date_range(start=start, end=dates[-1], freq=pd.DateOffset(months=rebalance_months))
+    
+    all_weights = []
+
+    for current_date in rebalance_dates:
+        window_start = current_date - pd.Timedelta(days=lookback_days)
+        window_prices = prices.loc[window_start:current_date]
+        if window_prices.shape[0] < 30:
+            continue
+        if strategy == 'max_sharpe':
+            try:
+                w, _ = max_sharpe_weights(window_prices, risk_free_rate=risk_free_rate)
+            except ValueError:
+                w, _ = min_volatility_weights(window_prices)
+        else:
+            w, _ = min_volatility_weights(window_prices)
+        current_weights = pd.Series(w, index=prices.columns, name=current_date)
+        all_weights.append(current_weights)
+
+    weights_df = pd.DataFrame(all_weights)
+    return weights_df
