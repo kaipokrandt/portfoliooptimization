@@ -6,6 +6,8 @@
 
 ---
 
+As with my private equity dashboard, feel free to clone and deploy yourself. I run this locally at all times.
+
 ## Overview
 
 This project helps you figure out **how to split your money among multiple stocks** to either maximize returns or minimize risk.  
